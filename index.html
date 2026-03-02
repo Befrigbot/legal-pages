@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نظام إدارة متجر الهواتف والإكسسوارات</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <h1>إدارة المتجر</h1>
+      <nav>
+        <button class="nav-btn active" data-view="dashboard">لوحة التحكم</button>
+        <button class="nav-btn" data-view="inventory">المخزون</button>
+        <button class="nav-btn" data-view="sales">مبيعات اليوم</button>
+        <button class="nav-btn" data-view="reports">الأرباح</button>
+        <button class="nav-btn" data-view="automation">واتساب + n8n</button>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <section id="dashboard" class="view active">
+        <h2>لوحة التحكم</h2>
+        <div class="cards" id="summaryCards"></div>
+      </section>
+
+      <section id="inventory" class="view">
+        <h2>إضافة قطعة إلى المخزون</h2>
+        <form id="inventoryForm" class="grid-form">
+          <input required name="code" placeholder="الكود / الباركود" />
+          <input required name="name" placeholder="اسم القطعة" />
+          <select required name="category">
+            <option value="">اختر الفئة</option>
+            <option>هواتف جديدة</option>
+            <option>هواتف مستعملة - Android</option>
+            <option>هواتف مستعملة - iPhone</option>
+            <option>حمايات شاشة</option>
+            <option>أغطية / Pochettes</option>
+            <option>حواسيب</option>
+            <option>إكسسوارات أخرى</option>
+          </select>
+          <input required name="buyPrice" type="number" min="0" step="0.01" placeholder="سعر الشراء" />
+          <input name="stockQty" type="number" min="1" step="1" value="1" placeholder="الكمية" />
+          <button type="submit">حفظ في المخزون</button>
+        </form>
+
+        <h3>جدول المخزون</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>الكود</th><th>الاسم</th><th>الفئة</th><th>سعر الشراء</th><th>الكمية المتوفرة</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryTable"></tbody>
+        </table>
+      </section>
+
+      <section id="sales" class="view">
+        <h2>تسجيل عملية بيع (بمسح الكود)</h2>
+        <form id="salesForm" class="grid-form">
+          <input required name="code" placeholder="امسح الباركود هنا" />
+          <input required name="sellPrice" type="number" min="0" step="0.01" placeholder="سعر البيع" />
+          <button type="submit">إضافة إلى مبيعات اليوم</button>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>التاريخ</th><th>الكود</th><th>القطعة</th><th>سعر الشراء</th><th>سعر البيع</th><th>الربح</th>
+            </tr>
+          </thead>
+          <tbody id="salesTable"></tbody>
+        </table>
+      </section>
+
+      <section id="reports" class="view">
+        <h2>ملخص الأرباح</h2>
+        <div class="cards" id="profitCards"></div>
+      </section>
+
+      <section id="automation" class="view">
+        <h2>إعداد ربط Google Sheets و n8n و WhatsApp</h2>
+        <ol>
+          <li>أنشئ Google Sheet فيه الأوراق: <strong>Inventory</strong>, <strong>Sales</strong>, <strong>Orders</strong>.</li>
+          <li>أنشئ Google Apps Script Web App لتحديث الأوراق عبر API.</li>
+          <li>في n8n: Webhook ← AI Agent ← Google Sheets ← WhatsApp Cloud API.</li>
+        </ol>
+        <form id="webhookForm" class="grid-form">
+          <input name="webhook" placeholder="ضع رابط Webhook من n8n" />
+          <button type="submit">حفظ الرابط</button>
+        </form>
+        <button id="sendDemoOrder">إرسال طلب تجريبي إلى n8n</button>
+        <p id="automationStatus"></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
